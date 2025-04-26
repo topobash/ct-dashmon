@@ -1,0 +1,17 @@
+[Unit]
+Description=Dashboard Monitoring System
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+User=radeck
+Group=radeck
+Type=idle
+ExecStartPre=/bin/sleep 5
+Restart=always
+RestartSec=5s
+ExecStart=/usr/bin/nodejs /home/radeck/dash-mon/backend/server.js
+
+[Install]
+WantedBy=multi-user.target
+

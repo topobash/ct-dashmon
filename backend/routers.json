@@ -1,0 +1,22 @@
+[
+  {
+    "id": "router-01",
+    "name": "Main Router FKK Cirendeu",
+    "location": "Head Office"
+  },
+  {
+    "id": "router-02",
+    "name": "Main Router FKK Cempaka Putih",
+    "location": "Sekretariat"
+  },
+  {
+    "id": "router-03",
+    "name": "Router CBT FKK Cirendeu",
+    "location": "CBT FKK Cirendeu"
+  },
+  {
+    "id": "router-04",
+    "name": "Remote Site Router",
+    "location": "Remote Site #1"
+  }
+]
