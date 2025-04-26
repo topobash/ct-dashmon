@@ -1,145 +1,158 @@
 <!DOCTYPE html>
 <html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Monitoring Router</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Monitoring Router</title>
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+  <body class="bg-gray-100 text-gray-800 p-6">
+    <h1 class="text-3xl font-bold mb-6">📡 Dashboard Monitoring Router</h1>
+    <div
+      id="router-list"
+      class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    ></div>
 
-<body class="bg-gray-100 text-gray-800 p-6">
+    <audio
+      id="alert-sound"
+      src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
+      preload="auto"
+    ></audio>
 
-  <h1 class="text-3xl font-bold mb-6">📡 Dashboard Monitoring Router</h1>
-  <div id="router-list" class="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"></div>
-
-  <audio id="alert-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
-
-  <!-- Modal Selamat Datang -->
-  <div id="welcome-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-xl shadow-md text-center max-w-md">
-      <h2 class="text-2xl font-bold mb-2">👋 Selamat Datang</h2>
-      <p class="mb-4 text-gray-600">Anda sedang mengakses Dashboard Monitoring Router.</p>
-      <button id="start-btn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-        Mulai Dashboard
-      </button>
+    <!-- Modal Selamat Datang -->
+    <div
+      id="welcome-modal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-md text-center max-w-md">
+        <h2 class="text-2xl font-bold mb-2">👋 Selamat Datang</h2>
+        <p class="mb-4 text-gray-600">
+          Anda sedang mengakses Dashboard Monitoring Router.
+        </p>
+        <button
+          id="start-btn"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Mulai Dashboard
+        </button>
+      </div>
     </div>
-  </div>
 
-  <script>
-    const hostname = window.location.hostname;
-    const socket = io(`http://${hostname}:3000`);
-    const routerList = document.getElementById("router-list");
-    const alertSound = document.getElementById("alert-sound");
-    const startBtn = document.getElementById("start-btn");
-    const welcomeModal = document.getElementById("welcome-modal");
+    <script>
+      const hostname = window.location.hostname;
+      const socket = io(`http://${hostname}:7000`);
+      const routerList = document.getElementById("router-list");
+      const alertSound = document.getElementById("alert-sound");
+      const startBtn = document.getElementById("start-btn");
+      const welcomeModal = document.getElementById("welcome-modal");
 
-    let previousStatuses = {};
-    let currentRouters = [];
+      let previousStatuses = {};
+      let currentRouters = [];
 
-    // Aktifkan audio setelah klik tombol "Mulai Dashboard"
-    startBtn.addEventListener("click", () => {
-      alertSound.volume = 1.0;
-      alertSound.play().catch(() => { });
-      welcomeModal.style.display = "none";
-    });
+      // Aktifkan audio setelah klik tombol "Mulai Dashboard"
+      startBtn.addEventListener("click", () => {
+        alertSound.volume = 1.0;
+        alertSound.play().catch(() => {});
+        welcomeModal.style.display = "none";
+      });
 
-    // Ambil daftar router dari backend
-    fetch("http://172.100.11.7:3000/routers", {
-      headers: {
-        "x-api-key": "dash-mon-routers-key"
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        currentRouters = data.map((router) => {
-          previousStatuses[router.id] = "offline";
-          return router;
+      // Ambil daftar router dari backend
+      fetch("http://172.100.11.7:3000/routers", {
+        headers: {
+          "x-api-key": "dash-mon-routers-key",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          currentRouters = data.map((router) => {
+            previousStatuses[router.id] = "offline";
+            return router;
+          });
+          renderRouters(currentRouters);
         });
+
+      // Terima status update dari server
+      socket.on("status_update", (updatedRouters) => {
+        currentRouters = currentRouters.map((router) => {
+          const updated = updatedRouters.find((r) => r.id === router.id);
+          return {
+            ...router,
+            status: updated?.status || "offline",
+            lastSeen: updated?.lastSeen || null,
+          };
+        });
+
         renderRouters(currentRouters);
       });
 
-    // Terima status update dari server
-    socket.on("status_update", (updatedRouters) => {
-      currentRouters = currentRouters.map((router) => {
-        const updated = updatedRouters.find((r) => r.id === router.id);
-        return {
-          ...router,
-          status: updated?.status || "offline",
-          lastSeen: updated?.lastSeen || null
-        };
-      });
+      function renderRouters(routers) {
+        routerList.innerHTML = "";
 
-      renderRouters(currentRouters);
-    });
+        routers.forEach((r) => {
+          const status = r.status || "unknown";
+          const statusColor =
+            status === "online"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800";
+          const statusIcon = status === "online" ? "🟢" : "🔴";
 
-    function renderRouters(routers) {
-      routerList.innerHTML = "";
+          const lastSeen = r.lastSeen
+            ? `${Math.floor((Date.now() - r.lastSeen) / 1000)} detik yang lalu`
+            : "tidak tersedia";
 
-      routers.forEach((r) => {
-        const status = r.status || "unknown";
-        const statusColor = status === "online"
-          ? "bg-green-100 text-green-800"
-          : "bg-red-100 text-red-800";
-        const statusIcon = status === "online" ? "🟢" : "🔴";
-
-        const lastSeen = r.lastSeen
-          ? `${Math.floor((Date.now() - r.lastSeen) / 1000)} detik yang lalu`
-          : "tidak tersedia";
-
-        const card = document.createElement("div");
-        card.className = `p-4 rounded-xl shadow bg-white border-l-4 ${status === "online" ? "border-green-500" : "border-red-500"
+          const card = document.createElement("div");
+          card.className = `p-4 rounded-xl shadow bg-white border-l-4 ${
+            status === "online" ? "border-green-500" : "border-red-500"
           }`;
 
-        card.innerHTML = `
+          card.innerHTML = `
             <div class="text-xl font-semibold mb-1">${r.name}</div>
-            <div class="text-sm text-gray-500 mb-2">${r.id} - ${r.location}</div>
+            <div class="text-sm text-gray-500 mb-2">${r.id} - ${
+            r.location
+          }</div>
             <div class="text-sm ${statusColor} inline-block px-3 py-1 rounded-full font-medium">${statusIcon} ${status.toUpperCase()}</div>
             <div class="text-xs text-gray-400 mt-1">Last seen: ${lastSeen}</div>
           `;
 
-        routerList.appendChild(card);
+          routerList.appendChild(card);
 
-        // Deteksi perubahan status online -> offline
-        if (
-          previousStatuses[r.id] === "online" &&
-          r.status === "offline"
-        ) {
-          showAlert(r.id);
-        }
+          // Deteksi perubahan status online -> offline
+          if (previousStatuses[r.id] === "online" && r.status === "offline") {
+            showAlert(r.id);
+          }
 
-        previousStatuses[r.id] = r.status;
-      });
-    }
-
-    function showAlert(routerId) {
-      let loopCount = 0;
-      const maxLoops = 3;
-      const playInterval = 2000; // 2 detik antar bunyi
-
-      function playSoundLoop() {
-        if (loopCount >= maxLoops) return;
-        alertSound.currentTime = 0;
-        alertSound.play().catch(() => { });
-        loopCount++;
-        setTimeout(playSoundLoop, playInterval);
+          previousStatuses[r.id] = r.status;
+        });
       }
 
-      playSoundLoop(); // 🔁 mulai loop suara
+      function showAlert(routerId) {
+        let loopCount = 0;
+        const maxLoops = 3;
+        const playInterval = 2000; // 2 detik antar bunyi
 
-      const alertBox = document.createElement("div");
-      alertBox.className = "alert bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4";
-      alertBox.textContent = `⚠️ ALERT: ${routerId} is OFFLINE`;
-      routerList.prepend(alertBox);
+        function playSoundLoop() {
+          if (loopCount >= maxLoops) return;
+          alertSound.currentTime = 0;
+          alertSound.play().catch(() => {});
+          loopCount++;
+          setTimeout(playSoundLoop, playInterval);
+        }
 
-      // Biarkan alert tampil lebih lama, misal 20 detik
-      setTimeout(() => {
-        alertBox.remove();
-      }, 20000);
-    }
+        playSoundLoop(); // 🔁 mulai loop suara
 
-  </script>
-</body>
+        const alertBox = document.createElement("div");
+        alertBox.className =
+          "alert bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4";
+        alertBox.textContent = `⚠️ ALERT: ${routerId} is OFFLINE`;
+        routerList.prepend(alertBox);
 
+        // Biarkan alert tampil lebih lama, misal 20 detik
+        setTimeout(() => {
+          alertBox.remove();
+        }, 20000);
+      }
+    </script>
+  </body>
 </html>

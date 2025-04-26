@@ -53,7 +53,7 @@ app.get("/routers", (req, res) => {
   });
 });
 
-const PORT = 3000;
+const PORT = 7000;
 
 // Receive heartbeat from router
 // const routerStatus = {};
