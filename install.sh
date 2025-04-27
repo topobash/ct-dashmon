@@ -30,4 +30,4 @@ sudo systemctl restart dash-mon.service
 
 # 4. Finished
 echo "✅ CT-DashMon installation complete!"
-echo "Access your dashboard at: http://<your-server-ip>:3000"
+echo "Access your dashboard at: http://<your-server-ip>:7000"
