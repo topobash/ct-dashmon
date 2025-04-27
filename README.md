@@ -37,44 +37,46 @@ Real-time monitoring router berbasis heartbeat + Telegram alerts.
    ```
 
 3. Update file .env di folder backend/
+
    TELEGRAM_TOKEN=your-bot-token
    TELEGRAM_CHAT_ID=your-chat-id
 
 4. Dashboard akan berjalan di alamat
+
    https://<ip_server:7000
 
-🖥️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
-    - Node.js (Express server)
-    - Socket.IO (real-time communication)
-    - TailwindCSS (frontend styling)
-    - Telegram Bot API (alerts)
-    - Systemd service (Linux auto-run)
+- Node.js (Express server)
+- Socket.IO (real-time communication)
+- TailwindCSS (frontend styling)
+- Telegram Bot API (alerts)
+- Systemd service (Linux auto-run)
 
 ---
 
-📡 Cara Membuat Heartbeat di Router MikroTik
+## 📡 Cara Membuat Heartbeat di Router MikroTik
 
-    Agar router mengirim heartbeat ke server CT-DashMon, buat scheduler baru:
-    Masuk ke router menggunakan Winbox/WebFig.
-    Masuk menu:
-     - System ➔ Scheduler ➔ Add (+)
+Agar router mengirim heartbeat ke server CT-DashMon, buat scheduler baru:
+Masuk ke router menggunakan Winbox/WebFig.
+Masuk menu: - System ➔ Scheduler ➔ Add (+)
 
-    Isi konfigurasi:
-    Field	        Value
-    Name	        send-heartbeat
-    Start Time	    startup
-    Interval	    00:00:30
-    On Event	    (isi script di bawah)
+Isi konfigurasi:
+Field Value
+Name send-heartbeat
+Start Time startup
+Interval 00:00:30
+On Event (isi script di bawah)
 
-    Script On Event:
-    ```bash
+Script On Event:
+`bash
         /tool fetch url="http://<server-ip>:7000/heartbeat" http-method=post http-data="{\"router_id\":\"router-01\"}" http-header-field="Content-Type: application/json"
-    ```
+    `
 
-    Catatan:
-        Ganti <server-ip> dengan IP atau domain server kamu.
-        Ganti router-01 sesuai ID router di file routers.json.
+Catatan:
+
+- Ganti <server-ip> dengan IP atau domain server kamu.
+- Ganti router-01 sesuai ID router di file routers.json.
 
 ---
 
