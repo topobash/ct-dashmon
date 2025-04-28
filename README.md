@@ -33,18 +33,22 @@ Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berba
 
 2. Jalankan Installer
 
+   sebelum menjalankan installer, ubah file **dash-mon.service** dan sesuaikan bagian "User" dan "Group" serta "WorkingDirectory"
+   kemudian jalankan perintah berikut:
+   
    ```bash
    chmod +x install.sh
    ./install.sh
 
    ```
 
-3. Update file .env di folder backend/
+4. Update file .env di folder backend/
 
    TELEGRAM_TOKEN=your-bot-token
+   
    TELEGRAM_CHAT_ID=your-chat-id
 
-4. Dashboard akan berjalan di alamat
+5. Dashboard akan berjalan di alamat
 
    https://<ip_server>:7000 // <-- Ubah <ip_server> sesuai dengan ip pada komputer server
 
