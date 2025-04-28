@@ -28,6 +28,7 @@ const io = new Server(server, {
 
 // Load API Key dari .env
 const API_KEY_ROUTERS = process.env.API_KEY_ROUTERS || "default-key";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 
 app.use(cors());
 app.use(express.json());
@@ -36,6 +37,16 @@ app.use(express.json());
 app.use("/", express.static(path.join(__dirname, "../frontend")));
 
 // ------------------------------ ROUTES ------------------------------- //
+
+// Login admin (check password)
+app.post('/admin-login', (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) {
+    return res.json({ success: true });
+  } else {
+    return res.status(401).json({ success: false, error: 'Unauthorized' });
+  }
+});
 
 // Public: Get daftar routers
 app.get("/routers", (req, res) => {

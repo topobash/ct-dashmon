@@ -92,7 +92,7 @@
       class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
     >
       <div class="bg-white p-6 rounded-xl shadow-md text-center max-w-sm">
-        <h2 class="text-2xl font-bold mb-4">🔏 Login Admin</h2>
+        <h2 class="text-2xl font-bold mb-4">🔒 Login Admin</h2>
         <input
           type="password"
           id="admin-password"
@@ -114,9 +114,6 @@
       const loginBtn = document.getElementById("login-btn");
       const adminPasswordInput = document.getElementById("admin-password");
 
-      // Ganti inin jadi password admin
-      const ADMIN_PASSWORD = "M4k4ndulubr0";
-
       const hostname = window.location.hostname;
       const tableBody = document.getElementById("router-table");
       const addBtn = document.getElementById("add-btn");
@@ -134,12 +131,27 @@
 
       loginBtn.addEventListener("click", () => {
         const inputPassword = adminPasswordInput.value.trim();
-        if (inputPassword === ADMIN_PASSWORD) {
-          loginModal.classList.add("hidden");
-        } else {
-          alert("Password salah!");
-          adminPasswordInput.value = "";
-        }
+
+        fetch(`http://${hostname}:7000/admin-login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password: inputPassword }),
+        })
+          .then((res) => {
+            if (res.ok) {
+              loginModal.classList("hidden");
+              fetchRouters(); // ✅ setelah login sukses, baru fetch routers
+            } else {
+              alert("Password salah!");
+              adminPasswordInput.value = "";
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Gagal menghubungi server.");
+          });
       });
 
       function fetchRouters() {
