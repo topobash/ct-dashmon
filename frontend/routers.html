@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Routers - CT-DashMon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-6">
+    <h1 class="text-3xl font-bold mb-6">🔧 Manage Routers</h1>
+
+    <button
+      id="add-btn"
+      class="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+    >
+      ➕ Tambah Router
+    </button>
+
+    <div class="overflow-x-auto">
+      <table class="w-full bg-white rounded shadow">
+        <thead class="bg-gray-200 text-gray-700">
+          <tr>
+            <th class="py-2 px-4">ID</th>
+            <th class="py-2 px-4">Name</th>
+            <th class="py-2 px-4">Location</th>
+            <th class="py-2 px-4">Action</th>
+          </tr>
+        </thead>
+        <tbody id="router-table" class="text-gray-600">
+          <!-- Dinamis Data -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal Form -->
+    <div
+      id="modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden"
+    >
+      <div class="bg-white p-6 rounded-lg w-full max-w-md">
+        <h2 id="modal-title" class="text-xl font-bold mb-4"></h2>
+        <form id="router-form" class="space-y-4">
+          <div>
+            <label class="block font-medium">ID Router</label>
+            <input
+              type="text"
+              id="router-id"
+              class="w-full py-2 border rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block font-medium">Nama</label>
+            <input
+              type="text"
+              id="router-name"
+              class="w-full py-2 border rounded"
+              required
+            />
+          </div>
+          <div>
+            <label class="block font-medium">Lokasi</label>
+            <input
+              type="text"
+              id="router-location"
+              class="w-full py-2 border rounded"
+              required
+            />
+          </div>
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              id="cancel-btn"
+              class="px-4 py-2 bg-gray-400 text-white rounded"
+            >
+              Batal
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const hostname = window.location.hostname;
+      const tableBody = document.getElementById("router-table");
+      const addBtn = document.getElementById("add-btn");
+      const modal = document.getElementById("modal");
+      const form = document.getElementById("router-form");
+      const routerIdIinput = document.getElementById("router-id");
+      const routerNameInput = document.getElementById("router-name");
+      const routerLocationInput = document.getElementById("router-location");
+      const modalTitle = document.getElementById("modal-title");
+      const cancelBtn = document.getElementById("cancel-btn");
+
+      let editMode = false;
+      let editId = null;
+      const API_KEY = "dash-mon-routers-key"; // gunakan dari backend .env juga
+
+      function fetchRouters() {
+        fetch(`http://${hostname}:7000/routers`)
+          .then((res) => res.json())
+          .then((data) => renderTable(data))
+          .then((err) => console.error(err));
+      }
+
+      function renderTable(routers) {
+        tableBody.innerHTML = "";
+        routers.forEach((router) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+                <td class="border px-4 py-2">${router.id}</td>
+                <td class="border px-4 py-2">${router.name}</td>
+                <td class="border px-4 py-2">${router.location}</td>
+                <td class="border px-4 py-2 space-x-2">
+                    <button onclick="editRouter('${router.id}')" class="bg-yellow-400 px-2 py-1 rounded hover:bg-yellow-500">✏️ Edit</button>
+                    <button onclick="deleteRouter('${router.id}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">🗑️ Delete</button>
+                </td>
+            `;
+          tableBody.appendChild(tr);
+        });
+      }
+
+      addBtn.addEventListener("click", () => {
+        editMode = false;
+        routerIdIinput.disabled = false;
+        form.reset();
+        modalTitle.textContent = "➕ Tambah Router";
+        modal.classList.remove("hidden");
+      });
+
+      cancelBtn.addEventListener("click", () => {
+        modal.classList.add("hidden");
+      });
+
+      form.addEventListener("submiit", (e) => {
+        e.preventDefault();
+        const routerData = {
+          id: routerIdIinput.value.trim(),
+          name: routerNameInput.value.trim(),
+          location: routerLocationInput.value.trim(),
+        };
+
+        if (editMode) {
+          fetch(`http://${hostname}:7000/routers/${editId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY,
+            },
+            body: JSON.stringify(routerData),
+          }).then((res) => {
+            if (res.ok) {
+              modal.classList.add("hidden");
+              fetchRouters();
+            }
+          });
+        } else {
+          fetch(`http://${hostname}:7000/routers`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": API_KEY,
+            },
+            body: JSON.stringify(routerData),
+          }).then((res) => {
+            if (res.ok) {
+              modal.classList.add("hidden");
+              fetchRouters();
+            }
+          });
+        }
+      });
+
+      function editRouter(id) {
+        editMode = true;
+        editId = id;
+
+        fetch(`http://${hostname}:7000/routers`)
+          .then((res) => res.json())
+          .then((routers) => {
+            const router = routers.find((r) => r.id === id);
+            if (router) {
+              routerIdIinput.value = router.id;
+              routerNameInput.value = router.name;
+              routerLocationInput.value = router.location;
+              routerIdIinput.disabled = true;
+              modalTitle.textContent = "✏️ Edit Router";
+              modal.classList.remove("hidden");
+            }
+          });
+      }
+
+      function deleteRouter(id) {
+        if (confirm(`Yakin ingin hapus router "${id}"?`)) {
+          fetch(`http://${hostname}:7000/routers/${id}`, {
+            method: "DELETE",
+            headers: {
+              "x-api-key": API_KEY,
+            },
+          }).then((res) => {
+            if (res.ok) {
+              fetchRouters();
+            }
+          });
+        }
+      }
+
+      fetchRouters();
+    </script>
+  </body>
+</html>
