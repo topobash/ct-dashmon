@@ -123,8 +123,7 @@
               id="script-heartbeat"
               class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
             >
-              /tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
-                </pre
+/tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"</pre
             >
             <div class="mt-2 flex justify-end">
               <button
@@ -141,11 +140,7 @@
             <pre
               id="script-scheduler"
               class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
-            >
-              /system scheduler
-              add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
-                </pre
-            >
+            >/system scheduler <br> add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""</pre>
             <div class="mt-2 flex justify-end">
               <button
                 id="copy-scheduler"
