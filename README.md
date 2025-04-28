@@ -91,6 +91,8 @@ Catatan:
 
 👨‍💻 Developer
 
+Beliin kopi? boleh banget: [a link](https://saweria.co/topobasah)
+
+
     Developed with ❤️ by TopoBasah
     https://cobaterus.com
-    Beliin kopi boleh banget di: [a link](https://saweria.co/topobasah)
