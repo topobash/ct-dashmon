@@ -69,11 +69,11 @@ Masuk ke router menggunakan Winbox/WebFig.
 Masuk menu: - System ➔ Scheduler ➔ Add (+)
 
 Isi konfigurasi:
-Field         Value
-Name          send-heartbeat
-Start Time    startup
-Interval      00:00:30
-On Event      (isi script di bawah)
+
+   Name         => send-heartbeat
+   Start Time   => startup
+   Interval     => 00:00:30
+   On Event     => (isi script di bawah)
 
 Script On Event:
    ```bash
