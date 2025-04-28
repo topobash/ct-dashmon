@@ -179,7 +179,7 @@
 
       addBtn.addEventListener("click", () => {
         editMode = false;
-        routerIdIinput.disabled = false;
+        routerIdInput.disabled = false;
         form.reset();
         modalTitle.textContent = "➕ Tambah Router";
         modal.classList.remove("hidden");
@@ -189,10 +189,10 @@
         modal.classList.add("hidden");
       });
 
-      form.addEventListener("submiit", (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
         const routerData = {
-          id: routerIdIinput.value.trim(),
+          id: routerIdInput.value.trim(),
           name: routerNameInput.value.trim(),
           location: routerLocationInput.value.trim(),
         };
