@@ -91,5 +91,6 @@ Catatan:
 
 👨‍💻 Developer
 
-    Developed with ❤️ by CobaTerus Team
+    Developed with ❤️ by TopoBasah
     https://cobaterus.com
+    Beliin kopi boleh banget di: https://saweria.co/topobasah
