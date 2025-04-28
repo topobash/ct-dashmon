@@ -15,6 +15,18 @@
       >
     </div>
 
+    <div class="flex justify-between mb-6">
+      <a href="/index.html" class="text-blue-600 hover:underline"
+        >← Kembali ke Dashboard</a
+      >
+      <button
+        id="logout-btn"
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+      >
+        🚪 Logout
+      </button>
+    </div>
+
     <button
       id="add-btn"
       class="mb-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -140,6 +152,16 @@
       const cancelBtn = document.getElementById("cancel-btn");
       const toast = document.getElementById("toast");
 
+      const SESSION_KEY = "ct_dashmon_logged_in";
+
+      // Cek session login saat buka halaman
+      if (!localStorage.getItem(SESSION_KEY)) {
+        loginModal.classList.remove("hidden");
+      } else {
+        loginModal.classList.add("hidden");
+        fetchRouters();
+      }
+
       let editMode = false;
       let editId = null;
 
@@ -163,8 +185,10 @@
         })
           .then((res) => {
             if (res.ok) {
+              localStorage.setItem(SESSION_KEY, "true"); // ✅ Simpan ke localStorage
               loginModal.classList.add("hidden");
               fetchRouters();
+              showToast("Login berhasil!");
             } else {
               alert("Password salah!");
               adminPasswordInput.value = "";
@@ -294,6 +318,18 @@
           });
         }
       }
+
+      const logoutBtn = document.getElementById("logout-btn");
+
+      logoutBtn.addEventListener("click", () => {
+        if (confirm("Yakin ingin logout?")) {
+          localStorage.removeItem(SESSION_KEY); // ✅ Hapus dari localStorage
+          showToast("Logout berhasil!");
+          setTimeout(() => {
+            location.reload(); // 🔄 reload halaman
+          }, 1500); // kasih waktu 1,5 detik biar toast kelihatan
+        }
+      });
     </script>
   </body>
 </html>
