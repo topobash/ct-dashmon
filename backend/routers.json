@@ -1,18 +1,18 @@
 [
   {
     "id": "router-01",
-    "name": "Main Router FKK Cirendeu",
+    "name": "Main Router Of Head Office",
     "location": "Head Office"
   },
   {
     "id": "router-02",
-    "name": "Main Router FKK Cempaka Putih",
-    "location": "Sekretariat"
+    "name": "Router Of Branch Office A",
+    "location": "Branch Office A"
   },
   {
     "id": "router-03",
-    "name": "Router CBT FKK Cirendeu",
-    "location": "CBT FKK Cirendeu"
+    "name": "Router Of Branch Office B",
+    "location": "Branch Office B"
   },
   {
     "id": "router-04",
