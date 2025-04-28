@@ -131,7 +131,7 @@ app.delete('/routers/:id', (req, res) => {
     let routers = JSON.parse(data);
     routers = routers.filter(r => r.id !== routerId);
 
-    fs.readFile(filePath, JSON.stringify(routers, null, 2), (err) => {
+    fs.writeFile(filePath, JSON.stringify(routers, null, 2), (err) => {
       if (err) return res.status(500).send('Failed to delete router');
       res.json({ message: 'Router deleted' });
     });
