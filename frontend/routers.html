@@ -232,7 +232,7 @@
         editMode = true;
         editId = id;
 
-        fetch(`http://${hostname}:3000/routers`)
+        fetch(`http://${hostname}:7000/routers`)
           .then((res) => res.json())
           .then((routers) => {
             const router = routers.find((r) => r.id === id);
