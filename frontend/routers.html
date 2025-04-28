@@ -106,7 +106,7 @@
         fetch(`http://${hostname}:7000/routers`)
           .then((res) => res.json())
           .then((data) => renderTable(data))
-          .then((err) => console.error(err));
+          .catch((err) => console.error(err));
       }
 
       function renderTable(routers) {
