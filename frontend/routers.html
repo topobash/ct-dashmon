@@ -115,6 +115,12 @@
         >
           Login
         </button>
+
+        <a
+          href="/index.html"
+          class="block mt-2 text-blue-600 hover:underline text-sm"
+          >⬅️ Kembali ke Dashboard</a
+        >
       </div>
     </div>
 
@@ -320,7 +326,8 @@
           localStorage.removeItem(SESSION_KEY); // ✅ Hapus dari localStorage
           showToast("Logout berhasil!");
           setTimeout(() => {
-            location.reload(); // 🔄 reload halaman
+            window.location.href = "/index.html"; // ✅ redirect ke dashboard root
+            // location.reload(); // 🔄 reload halaman
           }, 1500); // kasih waktu 1,5 detik biar toast kelihatan
         }
       });

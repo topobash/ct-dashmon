@@ -3,6 +3,7 @@ node_modules/
 
 # Ignore environment variable files
 backend/.env
+backend/routers.json
 
 # Ignore system files
 .DS_Store
