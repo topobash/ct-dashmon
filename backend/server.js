@@ -96,19 +96,19 @@ app.put('/routers/:id', (req, res) => {
   }
 
   const routerId = req.params.id;
-  const updateRouter = req.body;
+  const updatedRouter = req.body;
 
   const filePath = path.join(__dirname, 'routers.json');
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) return res.status(500).send('Failed to load routers');
 
-    let routers = JSON.stringify(data);
+    let routers = JSON.parse(data);
     const index = routers.findIndex(r => r.id === routerId);
     if (index === -1) return res.status(404).send('Router not found');
 
-    routers[index] = { ...routers[index], ...updateRouter };
+    routers[index] = { ...routers[index], ...updatedRouter };
 
-    fs.readFile(filePath, JSON.stringify(routers, null, 2), (err) => {
+    fs.writeFile(filePath, JSON.stringify(routers, null, 2), (err) => {
       if (err) return res.status(500).send('Failed to update router');
       res.json({ message: 'Router updated' });
     });

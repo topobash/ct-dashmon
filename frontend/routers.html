@@ -232,15 +232,15 @@
         editMode = true;
         editId = id;
 
-        fetch(`http://${hostname}:7000/routers`)
+        fetch(`http://${hostname}:3000/routers`)
           .then((res) => res.json())
           .then((routers) => {
             const router = routers.find((r) => r.id === id);
             if (router) {
-              routerIdIinput.value = router.id;
+              routerIdInput.value = router.id;
               routerNameInput.value = router.name;
               routerLocationInput.value = router.location;
-              routerIdIinput.disabled = true;
+              routerIdInput.disabled = true;
               modalTitle.textContent = "✏️ Edit Router";
               modal.classList.remove("hidden");
             }
