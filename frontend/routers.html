@@ -117,41 +117,41 @@
         </h2>
 
         <div class="text-sm space-y-4 text-gray-700">
-          <div>
+          <div class="mb-6">
             <p><strong>1. Script Heartbeat MikroTik</strong></p>
-            <div class="relative">
-              <pre
-                id="script-heartbeat"
-                class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
-              >
+            <pre
+              id="script-heartbeat"
+              class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
+            >
               /tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
-                  </pre
-              >
+                </pre
+            >
+            <div class="mt-2 flex justify-end">
               <button
                 id="copy-heartbeat"
-                class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 text-xs rounded hover:bg-blue-600"
+                class="bg-blue-500 text-white px-3 py-1 text-xs rounded hover:bg-blue-600"
               >
-                📋 Copy
+                📋 Copy Script
               </button>
             </div>
           </div>
 
-          <div>
+          <div class="mb-6">
             <p><strong>2. Scheduler Heartbeat</strong></p>
-            <div class="relative">
-              <pre
-                id="script-scheduler"
-                class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
-              >
+            <pre
+              id="script-scheduler"
+              class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
+            >
               /system scheduler
-              add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:7000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
-                  </pre
-              >
+              add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
+                </pre
+            >
+            <div class="mt-2 flex justify-end">
               <button
                 id="copy-scheduler"
-                class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 text-xs rounded hover:bg-blue-600"
+                class="bg-blue-500 text-white px-3 py-1 text-xs rounded hover:bg-blue-600"
               >
-                📋 Copy
+                📋 Copy Script
               </button>
             </div>
           </div>
