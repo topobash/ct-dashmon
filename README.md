@@ -91,7 +91,7 @@ Catatan:
 
 👨‍💻 Developer
 
-Beliin kopi? boleh banget: [a link](https://saweria.co/topobasah)
+Beliin kopi? boleh banget: [Buat Beli Kopi](https://saweria.co/topobasah)
 
 
     Developed with ❤️ by TopoBasah
