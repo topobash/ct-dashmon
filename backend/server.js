@@ -26,17 +26,19 @@ const io = new Server(server, {
   },
 });
 
+// Load API Key dari .env
+const API_KEY_ROUTERS = process.env.API_KEY_ROUTERS || "default-key";
+
 app.use(cors());
 app.use(express.json());
 
+// Serve Frontend
 app.use("/", express.static(path.join(__dirname, "../frontend")));
 
-app.get("/routers", (req, res) => {
-  const apiKey = req.headers["x-api-key"];
-  if (apiKey !== "dash-mon-routers-key") {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+// ------------------------------ ROUTES ------------------------------- //
 
+// Public: Get daftar routers
+app.get("/routers", (req, res) => {
   const filePath = path.join(__dirname, "routers.json");
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -53,7 +55,79 @@ app.get("/routers", (req, res) => {
   });
 });
 
-const PORT = 7000;
+// Protected: Tambah router
+app.post('/routers', (req, res) => {
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey !== API_KEY_ROUTERS) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const newRouter = req.body;
+  const filePath = path.join(__dirname, 'routers.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) return res.status(500).send('Failed to load routers');
+
+    let routers = JSON.parse(data);
+    routers.push(newRouter);
+
+    fs.writeFile(filePath, JSON.stringify(routers, null, 2), (err) => {
+      if (err) return res.status(500).send('Failed to save router');
+      res.status(201).json({ message: 'Router addes' });
+    });
+  });
+});
+
+// Protected: Update router
+app.put('/routers/:id', (req, res) => {
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey !== API_KEY_ROUTERS) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const routerId = req.params.id;
+  const updateRouter = req.body;
+
+  const filePath = path.join(__dirname, 'routers.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) return res.status(500).send('Failed to load routers');
+
+    let routers = JSON.stringify(data);
+    const index = routers.findIndex(r => r.id === routerId);
+    if (index === -1) return res.status(404).send('Router not found');
+
+    routers[index] = { ...routers[index], ...updateRouter };
+
+    fs.readFile(filePath, JSON.stringify(routers, null, 2), (err) => {
+      if (err) return res.status(500).send('Failed to update router');
+      res.json({ message: 'Router updated' });
+    });
+  });
+});
+
+// Protected: Delete router
+app.delete('/routers/:id', (req, res) => {
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey !== API_KEY_ROUTERS) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const routerId = req.params.id;
+
+  const filePath = path.join(__dirname, 'routers.json');
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) return res.status(500).send('Failed to load routers');
+
+    let routers = JSON.parse(data);
+    routers = routers.filter(r => r.id !== routerId);
+
+    fs.readFile(filePath, JSON.stringify(routers, null, 2), (err) => {
+      if (err) return res.status(500).send('Failed to delete router');
+      res.json({ message: 'Router deleted' });
+    });
+  });
+});
+
+
 
 // Receive heartbeat from router
 // const routerStatus = {};
@@ -107,6 +181,7 @@ io.on("connection", (socket) => {
   socket.emit("status_update", getRouterStatus());
 });
 
+const PORT = 7000;
 server.listen(PORT, () => {
   console.log(`Backend server running at http://localhost:${PORT}`);
 });
