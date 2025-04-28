@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Manage Routers - CT-DashMon</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 p-6">
     <h1 class="text-3xl font-bold mb-6">🔧 Manage Routers</h1>
+
+    <div class="mb-6">
+      <a href="/index.html" class="text-blue-600 hover:underline"
+        >← Kembali ke Dashboard</a
+      >
+    </div>
 
     <button
       id="add-btn"
@@ -26,9 +32,7 @@
             <th class="py-2 px-4">Action</th>
           </tr>
         </thead>
-        <tbody id="router-table" class="text-gray-600">
-          <!-- Dinamis Data -->
-        </tbody>
+        <tbody id="router-table" class="text-gray-600"></tbody>
       </table>
     </div>
 
@@ -45,7 +49,7 @@
             <input
               type="text"
               id="router-id"
-              class="w-full py-2 border rounded"
+              class="w-full p-2 border rounded"
               required
             />
           </div>
@@ -54,7 +58,7 @@
             <input
               type="text"
               id="router-name"
-              class="w-full py-2 border rounded"
+              class="w-full p-2 border rounded"
               required
             />
           </div>
@@ -63,7 +67,7 @@
             <input
               type="text"
               id="router-location"
-              class="w-full py-2 border rounded"
+              class="w-full p-2 border rounded"
               required
             />
           </div>
@@ -108,13 +112,23 @@
       </div>
     </div>
 
+    <!-- Toast Notification -->
+    <div
+      id="toast"
+      class="fixed bottom-5 right-5 bg-green-500 text-white px-4 py-2 rounded shadow hidden"
+    >
+      Berhasil!
+    </div>
+
     <script>
-      // Simple password protected
+      const hostname = window.location.hostname;
+      const API_KEY = "dash-mon-routers-key";
+
+      // Elemen
       const loginModal = document.getElementById("login-modal");
       const loginBtn = document.getElementById("login-btn");
       const adminPasswordInput = document.getElementById("admin-password");
 
-      const hostname = window.location.hostname;
       const tableBody = document.getElementById("router-table");
       const addBtn = document.getElementById("add-btn");
       const modal = document.getElementById("modal");
@@ -124,24 +138,33 @@
       const routerLocationInput = document.getElementById("router-location");
       const modalTitle = document.getElementById("modal-title");
       const cancelBtn = document.getElementById("cancel-btn");
+      const toast = document.getElementById("toast");
 
       let editMode = false;
       let editId = null;
-      const API_KEY = "dash-mon-routers-key"; // gunakan dari backend .env juga
 
+      // Show Toast
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.remove("hidden");
+        setTimeout(() => {
+          toast.classList.add("hidden");
+        }, 3000);
+      }
+
+      // Login Admin
       loginBtn.addEventListener("click", () => {
         const inputPassword = adminPasswordInput.value.trim();
 
         fetch(`http://${hostname}:7000/admin-login`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password: inputPassword }),
         })
           .then((res) => {
             if (res.ok) {
               loginModal.classList.add("hidden");
+              fetchRouters();
             } else {
               alert("Password salah!");
               adminPasswordInput.value = "";
@@ -153,6 +176,7 @@
           });
       });
 
+      // Fetch Routers
       function fetchRouters() {
         fetch(`http://${hostname}:7000/routers`)
           .then((res) => res.json())
@@ -160,23 +184,25 @@
           .catch((err) => console.error(err));
       }
 
+      // Render Table
       function renderTable(routers) {
         tableBody.innerHTML = "";
         routers.forEach((router) => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
-                <td class="border px-4 py-2">${router.id}</td>
-                <td class="border px-4 py-2">${router.name}</td>
-                <td class="border px-4 py-2">${router.location}</td>
-                <td class="border px-4 py-2 space-x-2">
-                    <button onclick="editRouter('${router.id}')" class="bg-yellow-400 px-2 py-1 rounded hover:bg-yellow-500">✏️ Edit Router</button>
-                    <button onclick="deleteRouter('${router.id}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">🗑️ Delete</button>
-                </td>
-            `;
+      <td class="border px-4 py-2">${router.id}</td>
+      <td class="border px-4 py-2">${router.name}</td>
+      <td class="border px-4 py-2">${router.location}</td>
+      <td class="border px-4 py-2 space-x-2">
+        <button onclick="editRouter('${router.id}')" class="bg-yellow-400 px-2 py-1 rounded hover:bg-yellow-500">✏️ Edit</button>
+        <button onclick="deleteRouter('${router.id}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">🗑️ Delete</button>
+      </td>
+    `;
           tableBody.appendChild(tr);
         });
       }
 
+      // Add Button
       addBtn.addEventListener("click", () => {
         editMode = false;
         routerIdInput.disabled = false;
@@ -185,10 +211,12 @@
         modal.classList.remove("hidden");
       });
 
+      // Cancel Modal
       cancelBtn.addEventListener("click", () => {
         modal.classList.add("hidden");
       });
 
+      // Submit Form
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const routerData = {
@@ -209,6 +237,7 @@
             if (res.ok) {
               modal.classList.add("hidden");
               fetchRouters();
+              showToast("Router berhasil diupdate!");
             }
           });
         } else {
@@ -223,11 +252,13 @@
             if (res.ok) {
               modal.classList.add("hidden");
               fetchRouters();
+              showToast("Router baru berhasil ditambahkan!");
             }
           });
         }
       });
 
+      // Edit Router
       function editRouter(id) {
         editMode = true;
         editId = id;
@@ -247,6 +278,7 @@
           });
       }
 
+      // Delete Router
       function deleteRouter(id) {
         if (confirm(`Yakin ingin hapus router "${id}"?`)) {
           fetch(`http://${hostname}:7000/routers/${id}`, {
@@ -257,12 +289,11 @@
           }).then((res) => {
             if (res.ok) {
               fetchRouters();
+              showToast("Router berhasil dihapus!");
             }
           });
         }
       }
-
-      fetchRouters();
     </script>
   </body>
 </html>
