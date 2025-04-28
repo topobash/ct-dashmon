@@ -119,20 +119,41 @@
         <div class="text-sm space-y-4 text-gray-700">
           <div>
             <p><strong>1. Script Heartbeat MikroTik</strong></p>
-            <pre class="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
-  /tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
-          </pre
-            >
+            <div class="relative">
+              <pre
+                id="script-heartbeat"
+                class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
+              >
+              /tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
+                  </pre
+              >
+              <button
+                id="copy-heartbeat"
+                class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 text-xs rounded hover:bg-blue-600"
+              >
+                📋 Copy
+              </button>
+            </div>
           </div>
 
           <div>
             <p><strong>2. Scheduler Heartbeat</strong></p>
-            <p>Gunakan scheduler untuk mengirim heartbeat setiap 10 detik:</p>
-            <pre class="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
-  /system scheduler
-  add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
-          </pre
-            >
+            <div class="relative">
+              <pre
+                id="script-scheduler"
+                class="bg-gray-100 p-4 rounded text-xs overflow-x-auto"
+              >
+              /system scheduler
+              add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:7000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
+                  </pre
+              >
+              <button
+                id="copy-scheduler"
+                class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 text-xs rounded hover:bg-blue-600"
+              >
+                📋 Copy
+              </button>
+            </div>
           </div>
 
           <div>
@@ -415,6 +436,29 @@
 
       closeHelpBtn.addEventListener("click", () => {
         helpModal.classList.add("hidden");
+      });
+
+      const copyHeartbeatBtn = document.getElementById("copy-heartbeat");
+      const copySchedulerBtn = document.getElementById("copy-scheduler");
+
+      copyHeartbeatBtn.addEventListener("click", () => {
+        const text = document
+          .getElementById("script-heartbeat")
+          .innerText.trim();
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showToast("Script Heartbeat disalin!"))
+          .catch((err) => alert("Gagal menyalin script"));
+      });
+
+      copySchedulerBtn.addEventListener("click", () => {
+        const text = document
+          .getElementById("script-scheduler")
+          .innerText.trim();
+        navigator.clipboard
+          .writeText(text)
+          .then(() => showToast("Script Scheduler disalin!"))
+          .catch((err) => alert("Gagal menyalin script"));
       });
     </script>
   </body>
