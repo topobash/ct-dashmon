@@ -1,16 +1,18 @@
 [Unit]
 Description=Dashboard Monitoring System
 After=network-online.target
-Requires=network-online.target
+Wants=network-online.target
 
 [Service]
-User=radeck
-Group=radeck
-Type=idle
+User=user
+Group=user
+WorkingDirectory=/home/user/ct-dashmon/backend
 ExecStartPre=/bin/sleep 5
+ExecStart=/usr/local/bin/node server.js
 Restart=always
 RestartSec=5s
-ExecStart=/usr/bin/nodejs /home/radeck/dash-mon/backend/server.js
+StandardOutput=journal
+StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
