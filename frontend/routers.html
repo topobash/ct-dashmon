@@ -9,16 +9,26 @@
   <body class="bg-gray-100 p-6">
     <h1 class="text-3xl font-bold mb-6">🔧 Manage Routers</h1>
 
-    <div class="flex justify-between mb-6">
-      <a href="/index.html" class="text-blue-600 hover:underline"
-        >← Kembali ke Dashboard</a
-      >
-      <button
-        id="logout-btn"
-        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-      >
-        🚪 Logout
-      </button>
+    <div class="flex justify-between items-center mb-6">
+      <div class="space-x-2">
+        <a href="/index.html" class="text-blue-600 hover:underline"
+          >← Kembali ke Dashboard</a
+        >
+      </div>
+      <div class="space-x-2">
+        <button
+          id="help-btn"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          ❓ Bantuan MikroTik
+        </button>
+        <button
+          id="logout-btn"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        >
+          🚪 Logout
+        </button>
+      </div>
     </div>
 
     <button
@@ -93,6 +103,55 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Modal Bantuan -->
+    <div
+      id="help-modal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-md text-left w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-4">
+          📡 Cara Setting Heartbeat MikroTik
+        </h2>
+
+        <div class="text-sm space-y-4 text-gray-700">
+          <div>
+            <p><strong>1. Script Heartbeat MikroTik</strong></p>
+            <pre class="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
+  /tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
+          </pre
+            >
+          </div>
+
+          <div>
+            <p><strong>2. Scheduler Heartbeat</strong></p>
+            <p>Gunakan scheduler untuk mengirim heartbeat setiap 10 detik:</p>
+            <pre class="bg-gray-100 p-4 rounded text-xs overflow-x-auto">
+  /system scheduler
+  add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
+          </pre
+            >
+          </div>
+
+          <div>
+            <p>
+              <strong>Catatan:</strong> Ganti <code>IP_SERVER</code> dengan IP
+              server CT-DashMon Anda, dan <code>YOUR_ROUTER_ID</code> sesuai ID
+              router yang anda daftarkan di sistem.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button
+            id="close-help-btn"
+            class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          >
+            Tutup
+          </button>
+        </div>
       </div>
     </div>
 
@@ -344,6 +403,18 @@
             // location.reload(); // 🔄 reload halaman
           }, 1500); // kasih waktu 1,5 detik biar toast kelihatan
         }
+      });
+
+      const helpBtn = document.getElementById("help-btn");
+      const helpModal = document.getElementById("help-modal");
+      const closeHelpBtn = document.getElementById("close-help-btn");
+
+      helpBtn.addEventListener("click", () => {
+        helpModal.classList.remove("hidden");
+      });
+
+      closeHelpBtn.addEventListener("click", () => {
+        helpModal.classList.add("hidden");
       });
     </script>
   </body>
