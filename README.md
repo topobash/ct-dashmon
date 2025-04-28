@@ -69,9 +69,9 @@ Interval      00:00:30
 On Event      (isi script di bawah)
 
 Script On Event:
-`bash
+   ```bash
    /tool fetch url="http://<server-ip>:7000/heartbeat" http-method=post http-data="{\"router_id\":\"router-01\"}" http-header-field="Content-Type: application/json"
-`
+   ```
 
 Ubah isi dari file routers.json yang berada pada folder backend. Sesuaikan id router, name router dan location router.
 
