@@ -141,8 +141,7 @@
         })
           .then((res) => {
             if (res.ok) {
-              loginModal.classList("hidden");
-              fetchRouters(); // ✅ setelah login sukses, baru fetch routers
+              loginModal.classList.add("hidden");
             } else {
               alert("Password salah!");
               adminPasswordInput.value = "";
