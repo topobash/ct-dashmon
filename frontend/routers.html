@@ -86,7 +86,37 @@
       </div>
     </div>
 
+    <!-- Modal Login -->
+    <div
+      id="login-modal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded-xl shadow-md text-center max-w-sm">
+        <h2 class="text-2xl font-bold mb-4">🔏 Login Admin</h2>
+        <input
+          type="password"
+          id="admin-password"
+          placeholder="Masukkan password..."
+          class="w-full p-2 border rounded mb-4"
+        />
+        <button
+          id="login-btn"
+          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+
     <script>
+      // Simple password protected
+      const loginModal = document.getElementById("login-modal");
+      const loginBtn = document.getElementById("login-btn");
+      const adminPasswordInput = document.getElementById("admin-password");
+
+      // Ganti inin jadi password admin
+      const ADMIN_PASSWORD = "M4k4ndulubr0";
+
       const hostname = window.location.hostname;
       const tableBody = document.getElementById("router-table");
       const addBtn = document.getElementById("add-btn");
@@ -101,6 +131,16 @@
       let editMode = false;
       let editId = null;
       const API_KEY = "dash-mon-routers-key"; // gunakan dari backend .env juga
+
+      loginBtn.addEventListener("click", () => {
+        const inputPassword = adminPasswordInput.value.trim();
+        if (inputPassword === ADMIN_PASSWORD) {
+          loginModal.classList.add("hidden");
+        } else {
+          alert("Password salah!");
+          adminPasswordInput.value = "";
+        }
+      });
 
       function fetchRouters() {
         fetch(`http://${hostname}:7000/routers`)
