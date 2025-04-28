@@ -1,7 +1,7 @@
 # CT-DashMon 📡
 
 **CobaTerus Dashboard Monitoring System**  
-Real-time monitoring router berbasis heartbeat + Telegram alerts.
+Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berbasis heartbeat + Telegram alerts.
 
 ---
 
@@ -62,16 +62,18 @@ Masuk ke router menggunakan Winbox/WebFig.
 Masuk menu: - System ➔ Scheduler ➔ Add (+)
 
 Isi konfigurasi:
-Field Value
-Name send-heartbeat
-Start Time startup
-Interval 00:00:30
-On Event (isi script di bawah)
+Field         Value
+Name          send-heartbeat
+Start Time    startup
+Interval      00:00:30
+On Event      (isi script di bawah)
 
 Script On Event:
 `bash
-        /tool fetch url="http://<server-ip>:7000/heartbeat" http-method=post http-data="{\"router_id\":\"router-01\"}" http-header-field="Content-Type: application/json"
-    `
+   /tool fetch url="http://<server-ip>:7000/heartbeat" http-method=post http-data="{\"router_id\":\"router-01\"}" http-header-field="Content-Type: application/json"
+`
+
+Ubah isi dari file routers.json yang berada pada folder backend. Sesuaikan id router, name router dan location router.
 
 Catatan:
 
