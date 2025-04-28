@@ -46,7 +46,7 @@ Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berba
 
 4. Dashboard akan berjalan di alamat
 
-   https://<ip_server:7000
+   https://<ip_server>:7000 // <-- Ubah <ip_server> sesuai dengan ip pada komputer server
 
 ## Teknologi yang Digunakan
 
@@ -76,7 +76,7 @@ Script On Event:
    /tool fetch url="http://<server-ip>:7000/heartbeat" http-method=post http-data="{\"router_id\":\"router-01\"}" http-header-field="Content-Type: application/json"
    ```
 
-Ubah isi dari file routers.json yang berada pada folder backend. Sesuaikan id router, name router dan location router.
+Ubah isi dari file **routers.json** yang berada pada folder backend. Sesuaikan id router, name router dan location router.
 
 Catatan:
 
