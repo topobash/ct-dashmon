@@ -59,7 +59,7 @@
       });
 
       // Ambil daftar router dari backend
-      fetch("http://172.100.11.7:3000/routers", {
+      fetch(`http://${hostname}:7000/routers`, {
         headers: {
           "x-api-key": "dash-mon-routers-key",
         },
