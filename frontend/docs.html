@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dokumentasi CT-DashMon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white shadow-md p-6 space-y-4 hidden md:block">
+        <h2 class="text-2xl font-bold mb-6">📖 Dokumentasi</h2>
+        <nav class="space-y-2">
+          <a href="#intro" class="block text-blue-600 hover:underline"
+            >Introduction</a
+          >
+          <a href="#installation" class="block text-blue-600 hover:underline"
+            >Installation</a
+          >
+          <a href="#configuration" class="block text-blue-600 hover:underline"
+            >Configuration</a
+          >
+          <a href="#router-setup" class="block text-blue-600 hover:underline"
+            >Router Setup</a
+          >
+          <a href="#usage" class="block text-blue-600 hover:underline">Usage</a>
+          <a href="#troubleshooting" class="block text-blue-600 hover:underline"
+            >Troubleshooting</a
+          >
+          <a href="#contact" class="block text-blue-600 hover:underline"
+            >Contact</a
+          >
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="flex-1 p-8 space-y-16">
+        <section id="intro">
+          <h1 class="text-3xl font-bold mb-4">📡 Introduction</h1>
+          <p>
+            CT-DashMon adalah aplikasi dashboard monitoring router yang
+            dirancang untuk memudahkan memantau status online/offline router
+            berbasis heartbeat.
+          </p>
+        </section>
+
+        <section id="installation">
+          <h2 class="text-2xl font-bold mb-4">🛠️ Installation</h2>
+          <p>
+            Petunjuk installasi backend dan frontend CT-DashMon di server Anda.
+          </p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Clone repository dari GitHub</li>
+            <li>Install dependencies: <code>npm install</code></li>
+            <li>
+              Jalankan server: <code>node server.js</code> atau gunakan systemd
+              service
+            </li>
+          </ul>
+        </section>
+
+        <section id="configuration">
+          <h2 class="text-2xl font-bold mb-4">⚙️ Configuration</h2>
+          <p>Setting environment variables di file <code>.env</code>:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>
+              <code>API_KEY_ROUTERS</code> = API Key untuk autentikasi
+              routers.json
+            </li>
+            <li><code>ADMIN_PASSWORD</code> = Password login admin panel</li>
+          </ul>
+        </section>
+
+        <section id="router-setup">
+          <h2 class="text-2xl font-bold mb-4">📡 Router Setup</h2>
+          <p>Setting script heartbeat di MikroTik:</p>
+          <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto mt-2">
+/tool fetch url="http://IP_SERVER:3000/heartbeat" http-method=post http-data="{\"router_id\":\"YOUR_ROUTER_ID\"}" http-header-field="Content-Type: application/json"
+      </pre
+          >
+          <p>Gunakan scheduler untuk mengirim heartbeat setiap 10 detik:</p>
+          <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto mt-2">
+/system scheduler
+add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVER:3000/heartbeat\" http-method=post http-data=\"{\\\"router_id\\\":\\\"YOUR_ROUTER_ID\\\"}\" http-header-field=\"Content-Type: application/json\""
+      </pre
+          >
+        </section>
+
+        <section id="usage">
+          <h2 class="text-2xl font-bold mb-4">🚀 Usage</h2>
+          <p>Cara menggunakan dashboard monitoring:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>Lihat status router di Dashboard</li>
+            <li>Manage routers: tambah, edit, hapus router</li>
+            <li>
+              Menerima notifikasi offline via dashboard + Telegram (opsional)
+            </li>
+          </ul>
+        </section>
+
+        <section id="troubleshooting">
+          <h2 class="text-2xl font-bold mb-4">🛠️ Troubleshooting</h2>
+          <p>Solusi masalah umum:</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li>
+              Server tidak jalan ➔ cek <code>node server.js</code> error log
+            </li>
+            <li>Routers tidak muncul ➔ pastikan API Key benar di headers</li>
+            <li>Heartbeat tidak diterima ➔ cek MikroTik scheduler jalan</li>
+          </ul>
+        </section>
+
+        <section id="contact">
+          <h2 class="text-2xl font-bold mb-4">📢 Contact</h2>
+          <p>
+            Butuh bantuan? Hubungi tim CobaTerus melalui website:
+            <a
+              href="https://cobaterus.com"
+              class="text-blue-600 hover:underline"
+              >https://cobaterus.com</a
+            >
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
