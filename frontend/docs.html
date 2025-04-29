@@ -16,6 +16,44 @@
       <!-- Sidebar -->
       <aside class="w-64 bg-white shadow-md p-6 space-y-4 hidden md:block">
         <h2 class="text-2xl font-bold mb-6">📖 Dokumentasi</h2>
+        <aside class="w-64 bg-white shadow-md p-6 space-y-6 hidden md:block">
+          <h2 class="text-2xl font-bold">📖 Dokumentasi</h2>
+
+          <!-- Search Box -->
+          <input
+            type="text"
+            id="search-docs"
+            placeholder="Cari..."
+            class="w-full border rounded p-2 text-sm"
+          />
+
+          <nav id="nav-links" class="space-y-2">
+            <a href="#intro" class="block text-blue-600 hover:underline"
+              >Introduction</a
+            >
+            <a href="#installation" class="block text-blue-600 hover:underline"
+              >Installation</a
+            >
+            <a href="#configuration" class="block text-blue-600 hover:underline"
+              >Configuration</a
+            >
+            <a href="#router-setup" class="block text-blue-600 hover:underline"
+              >Router Setup</a
+            >
+            <a href="#usage" class="block text-blue-600 hover:underline"
+              >Usage</a
+            >
+            <a
+              href="#troubleshooting"
+              class="block text-blue-600 hover:underline"
+              >Troubleshooting</a
+            >
+            <a href="#contact" class="block text-blue-600 hover:underline"
+              >Contact</a
+            >
+          </nav>
+        </aside>
+
         <nav class="space-y-2">
           <a href="#intro" class="block text-blue-600 hover:underline"
             >Introduction</a
@@ -129,5 +167,40 @@ add name=heartbeat interval=00:00:10 on-event="/tool fetch url=\"http://IP_SERVE
         </section>
       </main>
     </div>
+
+    <script>
+      // Search Sidebar
+      const searchInput = document.getElementById("search-docs");
+      const navLinks = document.querySelectorAll("#nav-links a");
+
+      searchInput.addEventListener("input", function () {
+        const keyword = this.value.toLowerCase();
+        navLinks.forEach((link) => {
+          const text = link.textContent.toLowerCase();
+          link.style.display = text.includes(keyword) ? "" : "none";
+        });
+      });
+
+      // Highlight Active Link on Scroll
+      const sections = document.querySelectorAll("main > section");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop - 80; // dikurangi offset navbar
+          if (pageYOffset >= sectionTop) {
+            current = section.getAttribute("id");
+          }
+        });
+
+        navLinks.forEach((link) => {
+          link.classList.remove("font-bold", "text-indigo-600");
+          if (link.getAttribute("href") === `#${current}`) {
+            link.classList.add("font-bold", "text-indigo-600");
+          }
+        });
+      });
+    </script>
   </body>
 </html>
