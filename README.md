@@ -3,7 +3,11 @@
 **CobaTerus Dashboard Monitoring System**  
 Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berbasis heartbeat + Telegram alerts.
 
-![image](https://github.com/user-attachments/assets/85248cd6-a556-4332-a695-bb64c98e744d)
+![image](https://github.com/user-attachments/assets/27e48705-e7b2-4d75-9ac8-c36f6361ee34)
+
+![image](https://github.com/user-attachments/assets/72ef72b3-ab7f-41b0-aed8-2b4f1b37bddb)
+
+![image](https://github.com/user-attachments/assets/30822cb1-fb3f-411b-a670-03f1b98f96ff)
 
 
 ---
