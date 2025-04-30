@@ -45,10 +45,11 @@ Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berba
 4. Update file .env di folder backend/
 
    TELEGRAM_TOKEN=your-bot-token
-   
    TELEGRAM_CHAT_ID=your-chat-id
+   API_KEY_ROUTERS = API Key untuk autentikasi routers.json
+   ADMIN_PASSWORD = Password login admin panel
 
-5. Dashboard akan berjalan di alamat
+6. Dashboard akan berjalan di alamat
 
    https://<ip_server>:7000 // <-- Ubah <ip_server> sesuai dengan ip pada komputer server
 
