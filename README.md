@@ -35,6 +35,11 @@ Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berba
 
    sebelum menjalankan installer, ubah file **dash-mon.service** dan sesuaikan bagian "User" dan "Group" serta "WorkingDirectory"
    kemudian jalankan perintah berikut:
+   <ul>
+      <li>User <-- diisi dengan user system</li>
+         <li>Group <-- diisi dengan Group dari user </li>
+      <li>WorkingDirectory <-- sesuaikan dengan direktori aplikasi ini berada</li>
+   </ul>
    
    ```bash
    chmod +x install.sh
@@ -45,8 +50,11 @@ Sistem ini berfungsi sebagai monitoring router (mikrotik) secara Real-time berba
 4. Update file .env di folder backend/
 
    TELEGRAM_TOKEN=your-bot-token
+   
    TELEGRAM_CHAT_ID=your-chat-id
+   
    API_KEY_ROUTERS = API Key untuk autentikasi routers.json
+   
    ADMIN_PASSWORD = Password login admin panel
 
 6. Dashboard akan berjalan di alamat
